@@ -1,0 +1,350 @@
+package Vistas;
+
+import java.awt.EventQueue;
+
+import javax.swing.JInternalFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
+import java.awt.Font;
+import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.JComboBox;
+
+import com.toedter.calendar.JDateChooser;
+
+import Dao.ClassCrudEmpleadoImp;
+import model.TbEmpleado;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+import javax.persistence.Query;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
+import javax.swing.ImageIcon;
+import java.awt.event.ActionListener;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.awt.event.ActionEvent;
+import javax.swing.JTable;
+import javax.swing.JScrollPane;
+
+public class FrmEmpleado extends JInternalFrame {
+	private JLabel lblGestionarEmpleado;
+	private JTextField txtCodigo;
+	private JLabel lblcodigo;
+	private JTextField txtNombre;
+	private JTextField txtApellido;
+	private JLabel lblsexo;
+	private JComboBox cbx;
+	private JLabel lblemail;
+	private JTextField txtEmail;
+	private JLabel lbldni;
+	private JTextField txtdni;
+	private JLabel lbltelefono;
+	private JLabel lblfecha;
+	private JTextField txttelefono;
+	private JButton btnregistrar;
+	private JButton btnactualizar;
+	private JButton btnEliminar;
+	private JDateChooser dateChooserFN;
+	DefaultTableModel modelo=new DefaultTableModel();
+	int filaseleccionada=0;
+	private JTable table;
+	private JScrollPane scrollPane;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					FrmEmpleado frame = new FrmEmpleado();
+					frame.setLocation(HEIGHT, PROPERTIES);
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the frame.
+	 */
+	public FrmEmpleado() {
+		setClosable(true);
+		setBounds(100, 100, 791, 689);
+		getContentPane().setLayout(null);
+		
+		lblGestionarEmpleado = new JLabel("Gestionar Empleado");
+		lblGestionarEmpleado.setFont(new Font("Tahoma", Font.BOLD, 16));
+		lblGestionarEmpleado.setBounds(179, 27, 197, 30);
+		getContentPane().add(lblGestionarEmpleado);
+		
+		lblcodigo = new JLabel("Codigo");
+		lblcodigo.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblcodigo.setBounds(48, 99, 95, 30);
+		getContentPane().add(lblcodigo);
+		
+		txtCodigo = new JTextField();
+		txtCodigo.setBounds(165, 99, 155, 25);
+		getContentPane().add(txtCodigo);
+		txtCodigo.setColumns(10);
+		
+		JLabel lblNombre = new JLabel("Nombre");
+		lblNombre.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblNombre.setBounds(48, 151, 80, 14);
+		getContentPane().add(lblNombre);
+		
+		txtNombre = new JTextField();
+		txtNombre.setBounds(165, 143, 155, 25);
+		getContentPane().add(txtNombre);
+		txtNombre.setColumns(10);
+		
+		JLabel lblapellido = new JLabel("Apellido");
+		lblapellido.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblapellido.setBounds(48, 189, 80, 14);
+		getContentPane().add(lblapellido);
+		
+		txtApellido = new JTextField();
+		txtApellido.setColumns(10);
+		txtApellido.setBounds(165, 178, 155, 25);
+		getContentPane().add(txtApellido);
+		
+		lblsexo = new JLabel("Sexo");
+		lblsexo.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblsexo.setBounds(48, 226, 80, 14);
+		getContentPane().add(lblsexo);
+		
+		cbx = new JComboBox();
+		cbx.setModel(new DefaultComboBoxModel(new String[] {"Seleccione Sexo", "F", "M"}));
+		cbx.setBounds(165, 220, 155, 25);
+		getContentPane().add(cbx);
+		
+		lblemail = new JLabel("Email");
+		lblemail.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblemail.setBounds(48, 267, 80, 14);
+		getContentPane().add(lblemail);
+		
+		txtEmail = new JTextField();
+		txtEmail.setColumns(10);
+		txtEmail.setBounds(165, 256, 155, 25);
+		getContentPane().add(txtEmail);
+		
+		lbldni = new JLabel("DNI");
+		lbldni.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lbldni.setBounds(48, 308, 80, 14);
+		getContentPane().add(lbldni);
+		
+		txtdni = new JTextField();
+		txtdni.setColumns(10);
+		txtdni.setBounds(165, 292, 155, 25);
+		getContentPane().add(txtdni);
+		
+		lbltelefono = new JLabel("Telefono");
+		lbltelefono.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lbltelefono.setBounds(48, 347, 80, 14);
+		getContentPane().add(lbltelefono);
+		
+		lblfecha = new JLabel("Fecha_Nacimiento");
+		lblfecha.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblfecha.setBounds(26, 388, 118, 14);
+		getContentPane().add(lblfecha);
+		
+		txttelefono = new JTextField();
+		txttelefono.setColumns(10);
+		txttelefono.setBounds(165, 336, 155, 25);
+		getContentPane().add(txttelefono);
+		
+		dateChooserFN = new JDateChooser();
+		dateChooserFN.setBounds(165, 378, 155, 30);
+		getContentPane().add(dateChooserFN);
+		
+		btnregistrar = new JButton("Registrar");
+		btnregistrar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				//recuperar los valores del formulario
+				String nombre=txtNombre.getText();
+				String apellido=txtApellido.getText();
+				String sexo=cbx.getSelectedItem().toString();
+				String email=txtEmail.getText();
+				String dni=txtdni.getText();
+				String telefono=txttelefono.getText();
+				String fechanac=LeerFecha();
+				//realizamos las respectivas instancias
+				TbEmpleado regemp=new TbEmpleado(); 
+				ClassCrudEmpleadoImp crudemp=new ClassCrudEmpleadoImp();
+				//asignamos valores
+				regemp.setNombre(nombre);
+				regemp.setApellido(apellido);
+				regemp.setSexo(sexo);
+				regemp.setEmail(email);
+				regemp.setDni(dni);
+				regemp.setTelefono(telefono);
+				try {
+					regemp.setFechanac(Fecha_Actual(fechanac));
+				} catch (Exception e) {
+					// TODO: handle exception
+					e.printStackTrace();
+				}
+				//invocamos al metodo registrar
+				crudemp.RegistrarEmpleado(regemp);
+				
+				//invocamos el metodo limpiar
+				Limpiar();
+				//invocamos al metodo mostrar
+				MostrarEmpleado();
+			}//fin del metodo registrar
+			
+		});
+		btnregistrar.setIcon(new ImageIcon("C:\\Users\\HP\\Desktop\\4to ciclo\\lenguaje de programacion II\\semana01\\ProyectoVentasAutoJPA\\imagen\\save.png"));
+		btnregistrar.setBounds(398, 135, 145, 51);
+		getContentPane().add(btnregistrar);
+		
+		btnactualizar = new JButton("Actualizar");
+		btnactualizar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				//recuperamos los respectivos valores
+				//del formulario
+				int codigo=Integer.parseInt(txtCodigo.getText());
+				String nom=txtNombre.getText();
+				String ape=txtApellido.getText();
+				String sexo=cbx.getSelectedItem().toString();
+				String email=txtEmail.getText();
+				String dni=txtdni.getText();
+				String tele=txttelefono.getText();
+				String fechanac=LeerFecha();
+				
+				//hacemos respectivas instancias
+				TbEmpleado tempe=new TbEmpleado();
+				ClassCrudEmpleadoImp crudemp=new ClassCrudEmpleadoImp();
+				tempe.setIdempleado(codigo);
+				tempe.setNombre(nom);
+				tempe.setApellido(ape);
+				tempe.setSexo(sexo);
+				tempe.setEmail(email);
+				tempe.setDni(dni);
+				tempe.setTelefono(tele);
+					
+				//hacemos sus respectivos formatos
+				SimpleDateFormat sdf=new SimpleDateFormat("yyyy/MM/dd");
+				Date fecha;
+				try {
+					fecha=sdf.parse(fechanac);
+					Date fechasql=new Date(fecha.getTime());
+					tempe.setFechanac(fechasql);
+				} catch (Exception e) {
+					// TODO: handle exception
+					e.printStackTrace();
+				}
+				crudemp.ActualizarEmpleado(tempe);
+				Limpiar();
+				MostrarEmpleado();
+				
+				
+				}//fin del metodo actualizar
+		});
+		btnactualizar.setIcon(new ImageIcon("C:\\Users\\HP\\Desktop\\4to ciclo\\lenguaje de programacion II\\semana01\\ProyectoVentasAutoJPA\\imagen\\edit.png"));
+		btnactualizar.setBounds(398, 230, 145, 51);
+		getContentPane().add(btnactualizar);
+		
+		btnEliminar = new JButton("Eliminar");
+		btnEliminar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+				//recuperamos el codigo a eliminar
+				int cod=Integer.parseInt(txtCodigo.getText());
+				//hacemos las respectivas instancias
+				TbEmpleado tbemp=new TbEmpleado();
+				ClassCrudEmpleadoImp crudemp=new ClassCrudEmpleadoImp();
+				if(JOptionPane.showConfirmDialog(null, "Desea eliminar el registro?","Elimina Registro",JOptionPane.WARNING_MESSAGE
+						,JOptionPane.YES_NO_OPTION)==JOptionPane.YES_OPTION){
+					//asignamos el codigo a elinminar
+					tbemp.setIdempleado(cod);
+					crudemp.EliminarEmpleado(tbemp);
+					//invocamos al metodo limpiar
+					Limpiar();
+					//invocamos al metodo mostrar
+					MostrarEmpleado();
+				}//fin de la condicion
+				
+			
+				
+				
+			}//fin del metodo eliminar
+		});
+		btnEliminar.setIcon(new ImageIcon("C:\\Users\\HP\\Desktop\\4to ciclo\\lenguaje de programacion II\\semana01\\ProyectoVentasAutoJPA\\imagen\\delete.png"));
+		btnEliminar.setBounds(398, 331, 145, 51);
+		getContentPane().add(btnEliminar);
+		
+		scrollPane = new JScrollPane();
+		scrollPane.setBounds(26, 448, 739, 155);
+		getContentPane().add(scrollPane);
+		
+		table = new JTable();
+		scrollPane.setViewportView(table);
+		//llamos al metodo mostrar empleado
+		MostrarEmpleado();
+		
+//		tableSalida = new JTable();
+//		scrollPane.setViewportView(tableSalida);
+
+	}//fin del constructor
+	//creamos un metodo para captura la fecha 
+	public String LeerFecha(){
+		
+		//instanciamos la clase simpledataformat
+		SimpleDateFormat sdf=new SimpleDateFormat("yyyy//MM/dd");
+		//retornamos la fecha del datachooser
+		return sdf.format(dateChooserFN.getDate());
+	}//fin del metodo leer fecha
+	public Date Fecha_Actual(String fecha) throws ParseException{
+		Date fecha2;
+		SimpleDateFormat formatotxt=new SimpleDateFormat("yyyy//MM/dd");
+		fecha2=formatotxt.parse(fecha);
+		return fecha2;
+	}
+	public void Limpiar(){
+		txtNombre.setText("");
+		txtApellido.setText("");
+		cbx.setSelectedIndex(0);//para el combo usar el getselect y parametro es el indice
+		txtEmail.setText("");
+		txtdni.setText("");
+		txttelefono.setText("");
+		dateChooserFN.setCalendar(null);
+	}//fin del metpdp void
+	
+	public void MostrarEmpleado(){
+		modelo=new DefaultTableModel();
+		modelo.setColumnIdentifiers(new Object[]{"Codigo","Nombre","Apellido","Sexo","Email","Dni","Telefono","Fecha Nac."});
+		TbEmpleado tbemp=new TbEmpleado();
+		ClassCrudEmpleadoImp crudemp=new ClassCrudEmpleadoImp();
+		List<TbEmpleado> listar=crudemp.ListadoEmpleado();
+		//aplicamos el bucle
+		for(TbEmpleado lis:listar){
+			modelo.addRow(new Object[]{lis.getIdempleado(),lis.getNombre(),lis.getApellido(),
+					lis.getSexo(),lis.getEmail(),lis.getDni(),lis.getTelefono(),QueryFecha(lis.getIdempleado()).getSingleResult().toString()});;
+		}	
+		table.setModel(modelo);
+		//vinculamos el objeto tbsalida a scro
+		scrollPane.setViewportView(table);
+	}//fin del metodo mostrarempleado
+	public Query QueryFecha(int cod){
+		//establecer conexion con la unidad de persistencia
+		EntityManagerFactory emf=Persistence.createEntityManagerFactory("BDAutoJPA");
+		Query q=null;
+		EntityManager em=emf.createEntityManager();
+		String cons="Select fechanac from tb_empleado where idempleado=?";
+		q=em.createNativeQuery(cons).setParameter(1, cod);
+		return q;
+	}//fin del metodo query
+	
+	
+	
+}//fin del frm empleado
+

@@ -1,0 +1,137 @@
+package Vistas;
+
+import java.awt.BorderLayout;
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+
+import model.TbUsuario;
+
+import javax.swing.JTextField;
+import javax.swing.JPasswordField;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+import javax.persistence.Query;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import javax.swing.JLabel;
+import javax.swing.ImageIcon;
+import java.awt.Font;
+
+public class FrmLogueo extends JFrame implements ActionListener {
+
+	private JPanel contentPane;
+	private JTextField txtUsuario;
+	private JPasswordField psPassword;
+	private JButton btnAceptar;
+	private JLabel lblPass;
+	private JLabel lblUser;
+	private JLabel lblpass;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					FrmLogueo frame = new FrmLogueo();
+					frame.setLocationRelativeTo(null);
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the frame.
+	 */
+	/**
+	 * 
+	 */
+	/**
+	 * 
+	 */
+	public FrmLogueo() {
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 388, 593);
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		
+		txtUsuario = new JTextField();
+		txtUsuario.setBounds(144, 305, 183, 27);
+		contentPane.add(txtUsuario);
+		txtUsuario.setColumns(10);
+		
+		psPassword = new JPasswordField();
+		psPassword.setBounds(144, 371, 183, 27);
+		contentPane.add(psPassword);
+		
+		btnAceptar = new JButton("Ingresar al Sistema");
+		btnAceptar.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		btnAceptar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String usuario = txtUsuario.getText();
+				String password= psPassword.getText();
+				
+				//vamos a establecer la conexion
+				EntityManagerFactory conex=Persistence.createEntityManagerFactory("BDAutoJPA");
+				//manejar la entidades
+				EntityManager entimanaUsuario=conex.createEntityManager();
+				//aplicamos el jpql..
+				//esto esta relacionado con entidades
+					Query consulta=entimanaUsuario.createQuery("select u from TbUsuario u where u.usuario=:x and u.passworrd=:y",TbUsuario.class);
+				//pasamos los parametros
+					consulta.setParameter("x",usuario);
+					consulta.setParameter("y",password);
+					TbUsuario u;
+					try{
+						u=(TbUsuario) consulta.getSingleResult();
+						//si el usuario existe muestra un mensjae de bienvenida..
+						//y el formulario principal..
+						JOptionPane.showMessageDialog(null, "Bienvenido al sistema de inventario web");
+						//realizamos la respectiva instancia
+						FrmMenu menu=new FrmMenu();
+						//maximinar el formulario
+						menu.setExtendedState(MAXIMIZED_BOTH);//ESTO HARA QUE SE MAXIMICE LA PANTALLA DEL MENU
+						//mostrar le formulario
+						menu.setVisible(true);
+					}catch(Exception ex){
+						u=null;
+						//si nom muestra mensaje de error vamos a imprimir unos mensjaes
+						JOptionPane.showMessageDialog(null,"usuario o clave incorrecto","error en los datos intente de nuevo",JOptionPane.ERROR_MESSAGE);
+					}//fin del catch
+			}
+		});
+		btnAceptar.setBounds(120, 448, 167, 33);
+		contentPane.add(btnAceptar);
+		
+		lblPass = new JLabel("Password");
+		lblPass.setIcon(new ImageIcon("C:\\Users\\HP\\Desktop\\4to ciclo\\lenguaje de programacion II\\semana01\\ProyectoVentasAutoJPA\\imagen\\login.jpeg"));
+		lblPass.setBounds(75, 24, 225, 245);
+		contentPane.add(lblPass);
+		
+		lblUser = new JLabel("Usuario");
+		lblUser.setFont(new Font("Tahoma", Font.BOLD, 18));
+		lblUser.setBounds(38, 302, 96, 27);
+		contentPane.add(lblUser);
+		
+		lblpass = new JLabel("Password");
+		lblpass.setFont(new Font("Tahoma", Font.BOLD, 18));
+		lblpass.setBounds(29, 368, 105, 27);
+		contentPane.add(lblpass);
+	}
+
+
+	public void actionPerformed(ActionEvent e) {
+	}
+}

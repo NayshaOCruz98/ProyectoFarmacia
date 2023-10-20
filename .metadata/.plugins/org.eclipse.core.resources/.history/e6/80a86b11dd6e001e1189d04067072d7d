@@ -1,0 +1,86 @@
+package Vistas;
+
+import java.awt.BorderLayout;
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JMenu;
+import javax.swing.ImageIcon;
+import javax.swing.JDesktopPane;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+
+public class FrmMenu extends JFrame {
+
+	private JPanel contentPane;
+	private JDesktopPane escritorio;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					FrmMenu frame = new FrmMenu();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the frame.
+	 */
+	public FrmMenu() {
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 618, 379);
+		
+		JMenuBar menuBar = new JMenuBar();
+		setJMenuBar(menuBar);
+		
+		JMenu mnSistema = new JMenu("Sistema");
+		mnSistema.setIcon(new ImageIcon("C:\\Users\\HP\\Desktop\\4to ciclo\\lenguaje de programacion II\\semana01\\ProyectoVentasAutoJPA\\imagen\\System.png"));
+		menuBar.add(mnSistema);
+		
+		JMenu mnMantenimientos = new JMenu("Mantenimientos");
+		mnMantenimientos.setIcon(new ImageIcon("C:\\Users\\HP\\Desktop\\4to ciclo\\lenguaje de programacion II\\semana01\\ProyectoVentasAutoJPA\\imagen\\mantenimiento.png"));
+		menuBar.add(mnMantenimientos);
+		
+		JMenuItem mntmCrudempleado = new JMenuItem("CrudEmpleado");
+		mntmCrudempleado.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				//instanciar eel internalfrmae frmempleado
+				FrmEmpleado fremp = new FrmEmpleado();
+				//agregamos al escritorio
+				escritorio.add(fremp);
+				//lo visualizamos 
+				fremp.setVisible(true);
+				
+				
+			}//fin del metodo action performed
+		});
+		mnMantenimientos.add(mntmCrudempleado);
+		
+		JMenu mnReportes = new JMenu("Reportes");
+		mnReportes.setIcon(new ImageIcon("C:\\Users\\HP\\Desktop\\4to ciclo\\lenguaje de programacion II\\semana01\\ProyectoVentasAutoJPA\\imagen\\reports.png"));
+		menuBar.add(mnReportes);
+		
+		JMenu mnConfiguraciones = new JMenu("Configuraciones");
+		mnConfiguraciones.setIcon(new ImageIcon("C:\\Users\\HP\\Desktop\\4to ciclo\\lenguaje de programacion II\\semana01\\ProyectoVentasAutoJPA\\imagen\\user.png"));
+		menuBar.add(mnConfiguraciones);
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(contentPane);
+		contentPane.setLayout(new BorderLayout(0, 0));
+		
+		escritorio = new JDesktopPane();
+		contentPane.add(escritorio, BorderLayout.CENTER);
+	}
+}

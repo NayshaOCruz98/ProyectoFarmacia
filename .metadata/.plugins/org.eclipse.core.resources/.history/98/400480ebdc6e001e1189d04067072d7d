@@ -1,0 +1,40 @@
+package Vistas;
+
+import java.awt.EventQueue;
+
+import javax.swing.JInternalFrame;
+import javax.swing.JLabel;
+import java.awt.Font;
+
+public class FrmDocumento extends JInternalFrame {
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					FrmDocumento frame = new FrmDocumento();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the frame.
+	 */
+	public FrmDocumento() {
+		setBounds(100, 100, 536, 373);
+		getContentPane().setLayout(null);
+		
+		JLabel lblGestionarDocumentos = new JLabel("Gestionar Documentos");
+		lblGestionarDocumentos.setFont(new Font("Tahoma", Font.BOLD, 21));
+		lblGestionarDocumentos.setBounds(153, 11, 255, 27);
+		getContentPane().add(lblGestionarDocumentos);
+
+	}
+}
